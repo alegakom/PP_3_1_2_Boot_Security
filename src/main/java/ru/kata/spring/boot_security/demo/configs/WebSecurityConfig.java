@@ -8,7 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,27 +25,64 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
+                .antMatchers("/", "/index").authenticated()
+                .antMatchers("/admin").hasAnyRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
                 .permitAll()
                 .and()
-                .logout()
+                .logout().logoutSuccessUrl("/index")
                 .permitAll();
     }
 
     // аутентификация inMemory
+//    @Bean
+//    @Override
+//    public UserDetailsService userDetailsService() {
+//        UserDetails admin =
+//                User.withDefaultPasswordEncoder()
+//                        .username("oleg")
+//                        .password("admin")
+//                        .roles("ADMIN", "USER")
+//                        .build();
+//
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                        .username("user")
+//                        .password("user")
+//                        .roles("USER")
+//                        .build();
+//
+//        return new InMemoryUserDetailsManager(admin, user);
+//    }
+
+    //JDBC Authentication
     @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService (DataSource datasource) {
+        UserDetails admin =
+                User.withDefaultPasswordEncoder()
+                        .username("oleg")
+                        .password("admin")
+                        .roles("ADMIN", "USER")
+                        .build();
+
         UserDetails user =
                 User.withDefaultPasswordEncoder()
                         .username("user")
                         .password("user")
                         .roles("USER")
                         .build();
-
-        return new InMemoryUserDetailsManager(user);
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(datasource);
+        if(jdbcUserDetailsManager.userExists(user.getUsername())) {
+            jdbcUserDetailsManager.deleteUser(user.getUsername());
+        }
+        if(jdbcUserDetailsManager.userExists(admin.getUsername())) {
+            jdbcUserDetailsManager.deleteUser(user.getUsername());
+        }
+        jdbcUserDetailsManager.createUser(admin);
+        jdbcUserDetailsManager.createUser(user);
+        return jdbcUserDetailsManager;
     }
 }

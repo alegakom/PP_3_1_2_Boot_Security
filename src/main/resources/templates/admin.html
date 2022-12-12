@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> List of users</title>
+</head>
+<style>
+    body {
+        background: antiquewhite;
+    }
+</style>
+<div>
+    <table class="table table-dark" style="background: black">
+        <p><button onclick="window.location.href='/user?count=1';">Show 1 user</button>
+            <button onclick="window.location.href='/user?count=2';">Show 2 user</button>
+            <button onclick="window.location.href='/user?count=3';">Show 3 user</button>
+            <button onclick="window.location.href='/user?count=4';">Show 4 user</button>
+            <button onclick="window.location.href='/user?count=5';">Show 5 user</button>
+            <button onclick="window.location.href='/user?count=100';">Show 100 users</button> </p>
+        <form method="POST" action="/user/save">
+            <p>Enter user:</p>
+            <p><label for="name"></label><input type="text" name="name" value="" pattern="^[a-zA-Z]+$" id="name" placeholder="Name" required></p>
+            <p><label for="lastName"></label><input type="text" name="lastName" value="" pattern="^[a-zA-Z]+$" id="lastName" placeholder="Lastname" required></p>
+            <p><label for="age"></label><input type="text" name="age" value="" pattern="^[0-9]+$" id="age" placeholder="Age" required></p>
+            <p><input type="submit" value="Submit"></p>
+        </form>
+        <thead>
+        <tr>
+            <th style="background: coral" scope ="col">id</th>
+            <th style="background: coral" scope="col">Name</th>
+            <th style="background: coral" scope="col">Lastname</th>
+            <th style="background: coral" scope="col">Age</th>
+        </tr>
+        </thead>
+
+        <tr th:each="user: ${userList}">
+            <td style="background: darkgrey " th:text="${user.id}"/>
+            <td style="background: darkgrey "  th:text="${user.name}"/>
+            <td style="background: darkgrey "  th:text="${user.lastName}"/>
+            <td style="background: darkgrey "  th:text="${user.age}"/>
+            <td><form method="GET">
+                <p><input type="submit" value="Edit" th:formaction="${'/user/update/'+ user.id}"></p>
+            </form></td>
+            <td><form method="POST">
+                <p><button type="submit" th:formaction="${'/user/delete/'+ user.id}">Delete</button></p>
+            </form></td>
+        </tr>
+    </table>
+    <button onclick="window.location.href='/logout';">Logout</button>
+</div>
