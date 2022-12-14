@@ -5,7 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,25 +19,35 @@ public class User implements UserDetails {
     private String name;
     private String lastName;
     private Integer age;
+    private String username;
+    private String password;
 
-    public User() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "\n" + "User  {" +
-                "id = " + id +
-                ", name = '" + name + '\'' +
-                ", lastName = '" + lastName + '\'' +
-                ", age = " + age +
-                '}';
-    }
-
-    public User(String name, String lastName, int age) {
+    public User(String name, String lastName, Integer age, String username, String password) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.username = username;
+        this.password = password;
+    }
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
+    private List<Role> roles = new ArrayList<>();
+
+    public void addUserRole (Role role) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+            roles.add(role);
+        } else {
+            roles.add(role);
+        }
+    }
+
+    public User() {
     }
 
     public Long getId() {
@@ -70,38 +82,64 @@ public class User implements UserDetails {
         this.age = age;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public String toString() {
+        return "Rolews{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 
     @Override
     public String getPassword() {
-        return null;
+
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

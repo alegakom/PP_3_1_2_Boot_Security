@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.user.Role;
 import ru.kata.spring.boot_security.demo.user.User;
 
 import java.util.List;
@@ -35,8 +36,12 @@ public class UserController {
     @PostMapping(value = "/admin/save")
     public String saveUser(@RequestParam(value = "name") String name,
                            @RequestParam(value = "lastName") String lastName,
-                           @RequestParam(value = "age") int age){
-        User user = new User(name, lastName, age);
+                           @RequestParam(value = "age")  int age,
+                               @RequestParam(value = "username") String username,
+                               @RequestParam(value = "password") String password,
+                               @RequestParam(value = "role") String role) {
+        User user = new User(name, lastName, age, username, password);
+        user.addUserRole(new Role(role.toUpperCase()));
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -54,11 +59,17 @@ public class UserController {
     public String updateUserById(@PathVariable(value = "id") int id,
                                  @RequestParam(value = "name") String name,
                                  @RequestParam(value = "lastName") String lastName,
-                                 @RequestParam(value = "age") int age){
+                                 @RequestParam(value = "age")  int age,
+                                 @RequestParam(value = "username") String username,
+                                 @RequestParam(value = "password") String password,
+                                 @RequestParam(value = "role") String role){
         User user = userService.getUserById(id);
         user.setName(name);
         user.setLastName(lastName);
         user.setAge(age);
+        user.setUsername(username);
+        user.setPassword(username);
+        user.addUserRole(new Role(role.toUpperCase()));
         userService.updateUser(user);
         return "redirect:/admin";
     }
