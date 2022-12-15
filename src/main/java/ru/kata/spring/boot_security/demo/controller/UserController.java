@@ -68,7 +68,7 @@ public class UserController {
         user.setLastName(lastName);
         user.setAge(age);
         user.setUsername(username);
-        user.setPassword(username);
+        user.setPassword(password);
         user.addUserRole(new Role(role.toUpperCase()));
         userService.updateUser(user);
         return "redirect:/admin";

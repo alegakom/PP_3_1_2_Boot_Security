@@ -25,7 +25,12 @@
             <p><label for="age"></label><input type="text" name="age" value="" pattern="^[0-9]+$" id="age" placeholder="Age" required></p>
             <p><label for="username"></label><input type="text" name="username" value="" pattern="^[a-zA-Z]+$" id="username" placeholder="Username" required></p>
             <p><label for="password"></label><input type="text" name="password" value="" pattern="^[a-zA-Z]+$" id="password" placeholder="Password" required></p>
-            <p><label for="role"></label><input type="text" name="role" value="" pattern="^[a-zA-Z]+$" id="role" placeholder="Role" required></p>
+            <p><label>
+                <input name="role" type="radio" value="USER">
+            </label> User</p>
+            <p><label>
+                <input name="role" type="radio" value="ADMIN">
+            </label> Admin</p>
             <p><input type="submit" value="Submit"></p>
         </form>
         <thead>
@@ -47,7 +52,7 @@
             <td style="background: darkgrey "  th:text="${user.getAge()}"/>
             <td style="background: darkgrey "  th:text="${user.getUsername()}"/>
             <td style="background: darkgrey "  th:text="${user.getPassword()}"/>
-<!--            <td style="background: darkgrey "  th:text="${user.getRoles()}"/>-->
+            <td style="background: darkgrey "  th:text="${user.getRolesForWeb()}"/>
             <td><form method="GET">
                 <p><input type="submit" value="Edit" th:formaction="${'/admin/update/'+ user.id}"></p>
             </form></td>

@@ -18,8 +18,12 @@
         <input type="text" name="username" value="" pattern="^[a-zA-Z]+$" id="username" placeholder="Username" required></p>
     <p><label for="password"></label>
         <input type="text" name="password" value="" pattern="^[a-zA-Z0-9]+$" id="password" placeholder="Password" required></p>
-    <p><label for="role"></label>
-        <input type="text" name="role" value="" pattern="^[a-zA-Z]+$" id="role" placeholder="Role" required></p>
+    <p><label>
+        <input name="role" type="radio" value="USER">
+    </label> User</p>
+    <p><label>
+        <input name="role" type="radio" value="ADMIN">
+    </label> Admin</p>
     <p><input type="submit" value="Submit"></p>
 </form>
 </body>

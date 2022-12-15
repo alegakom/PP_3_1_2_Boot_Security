@@ -7,8 +7,19 @@ import java.util.List;
 
 public interface UserService extends UserDao {
     List<User>getAllUsers ();
+
+    @Override
+    User findByUserName(String username);
+
+    @Override
     void saveUser(User user);
+
+    @Override
     void removeUser(long id);
+
+    @Override
     void updateUser(User user);
+
+    @Override
     User getUserById(long id);
 }

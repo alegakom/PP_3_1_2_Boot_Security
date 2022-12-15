@@ -5,9 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -30,7 +28,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id"),
@@ -99,9 +97,13 @@ public class User implements UserDetails {
         return roles;
     }
 
+    public List<String> getRolesForWeb() {
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    }
+
     @Override
     public String toString() {
-        return "Rolews{" +
+        return "Roles{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
