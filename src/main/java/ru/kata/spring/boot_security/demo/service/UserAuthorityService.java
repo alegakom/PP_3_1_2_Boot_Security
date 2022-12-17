@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.user.Role;
-import ru.kata.spring.boot_security.demo.user.User;
+import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -38,6 +38,6 @@ public class UserAuthorityService implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> mapAuthorities(Collection<Role> roles) {
-        return roles.stream().map(e -> new SimpleGrantedAuthority(e.getRole())).collect(Collectors.toList());
+        return roles.stream().map(e -> new SimpleGrantedAuthority(e.getAuthority())).collect(Collectors.toList());
     }
 }

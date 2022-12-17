@@ -17,12 +17,12 @@
     <p><label for="username"></label>
         <input type="text" name="username" value="" pattern="^[a-zA-Z]+$" id="username" placeholder="Username" required></p>
     <p><label for="password"></label>
-        <input type="text" name="password" value="" pattern="^[a-zA-Z0-9]+$" id="password" placeholder="Password" required></p>
+        <input type="text" name="password" value="" pattern="^[a-zA-Z0-9_.$]+$" id="password" placeholder="Password" required></p>
     <p><label>
-        <input name="role" type="radio" value="USER">
+        <input name="roles" type="radio" value="ROLE_USER" required>
     </label> User</p>
     <p><label>
-        <input name="role" type="radio" value="ADMIN">
+        <input name="roles" type="radio" value="ROLE_ADMIN" required>
     </label> Admin</p>
     <p><input type="submit" value="Submit"></p>
 </form>

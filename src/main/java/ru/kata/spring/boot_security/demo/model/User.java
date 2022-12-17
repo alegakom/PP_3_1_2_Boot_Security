@@ -1,11 +1,15 @@
-package ru.kata.spring.boot_security.demo.user;
+package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -28,21 +32,24 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @ManyToMany(cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @ManyToMany(
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id")
     )
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
 
     public void addUserRole (Role role) {
         if (roles == null) {
             roles = new ArrayList<>();
-            roles.add(role);
-        } else {
-            roles.add(role);
         }
+        roles.add(role);
+
     }
 
     public User() {
@@ -97,8 +104,8 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public List<String> getRolesForWeb() {
-        return getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    public Set<String> getRolesForWeb() {
+        return getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 
     @Override
