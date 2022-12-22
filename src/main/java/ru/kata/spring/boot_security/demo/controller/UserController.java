@@ -33,9 +33,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/admin")
-    public String getUsers(Principal principal, @RequestParam(value = "count", defaultValue = "100") int count, ModelMap model){
-        User mainUser = userService.findByUserName(principal.getName());
-        model.addAttribute("mainUser", mainUser);
+    public String getUsers(@RequestParam(value = "count", defaultValue = "100") int count, ModelMap model){
         List<User> userList;
         userList = userService.getAllUsers();
         model.addAttribute("userList",
@@ -64,7 +62,7 @@ public class UserController {
 
     @GetMapping(value = "admin/update/{id}")
     public String update(@PathVariable(value = "id") int id){
-        return "/admin";
+        return "update";
     }
     @PostMapping(value ="admin/update/{id}")
     public String updateUserById(@PathVariable(value = "id") int id,
@@ -82,6 +80,19 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(encodedPassword);
         user.addUserRole(new Role(role.toUpperCase()));
+        userService.updateUser(user);
+        return "redirect:/admin";
+    }
+
+    @GetMapping(value = "/admin/update/{id}/password")
+    public String newPassword(@PathVariable(value = "id") int id){
+        return "updatePassword";
+    }
+    @PostMapping(value = "/admin/update/{id}/password")
+    public String newPassword(@PathVariable(value = "id") int id,
+                              @RequestParam(value = "newPassword") String newPassword,  ModelMap model){
+        User user = userService.getUserById(id);
+        user.setPassword(passwordEncoder().encode(newPassword));
         userService.updateUser(user);
         return "redirect:/admin";
     }
