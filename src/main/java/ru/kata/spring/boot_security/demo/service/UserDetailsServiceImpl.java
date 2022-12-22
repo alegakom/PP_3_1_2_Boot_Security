@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
-public class UserAuthorityService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserService userService;
 
